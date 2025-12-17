@@ -473,8 +473,13 @@
 
         document.getElementById('mode-toggle').addEventListener('click', (e) => {
             e.stopPropagation(); 
-            appState.isNaughtyMode = !appState.isNaughtyMode;
-            
+            appState.isNaughtyMode = !appState.isNaughtyMode; // 切換狀態
+            updateModeUI();   // 更新介面
+            refreshQuote();   // 刷新語錄
+            saveState();      // 儲存設定
+        });
+
+        function updateModeUI() {
             const toggleBtn = document.getElementById('mode-toggle');
             const icon = document.getElementById('mode-icon');
             const text = document.getElementById('mode-text');
@@ -482,16 +487,13 @@
             if (appState.isNaughtyMode) {
                 toggleBtn.classList.add('active');
                 icon.innerText = "🔥";
-                text.innerText = "烈焰模式"; // 這是正式且帶點誘惑的名稱
+                text.innerText = "烈焰模式";
             } else {
                 toggleBtn.classList.remove('active');
                 icon.innerText = "🌸";
-                text.innerText = "花見模式"; // 象徵純真、溫柔的陪伴
+                text.innerText = "花見模式";
             }
-            
-            refreshQuote(); 
-            saveState();
-        });
+        }
 
         // --- 核心邏輯：紀念日計算 ---
         function updateNextEvent() {
@@ -718,6 +720,7 @@
         window.onload = () => {
             loadState();
             updateMainTimer();
+            updateModeUI();
             refreshQuote();
             updateNextEvent();
             
