@@ -3,277 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>我們的時光</title>
+    <title>歲月情長 - 我們的紀念日</title>
     <style>
-        /* --- 基礎設定 --- */
         :root {
-            --primary-ink: #5e4b52; /* 深褐墨色 */
-            --accent-pink: #eeb8c3; /* 淡粉水墨 */
-            --bg-paper: #f9f7f2; /* 宣紙色 */
-            --glass-bg: rgba(255, 255, 255, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.9);
-            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            --ink-black: #3d3536;
+            --ink-grey: #7d7273;
+            --sakura-pink: #f8c6d1;
+            --accent-red: #d65a77;
+            --glass-bg: rgba(255, 255, 255, 0.85);
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: 'KaiTi', 'STKaiti', 'SimSun', serif; /* 優先使用楷體，營造水墨感 */
-            background-color: var(--bg-paper);
-            overflow: hidden; /* 防止滾動，特效全屏 */
-            color: var(--primary-ink);
+            margin: 0; padding: 0; height: 100%;
+            font-family: 'KaiTi', 'STKaiti', 'SimSun', serif;
+            background-color: #fdfcf8;
+            overflow: hidden;
+            color: var(--ink-black);
         }
 
-        /* 數字字體 - 為了清晰度使用無襯線 */
-        .num-font {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            font-weight: 300;
-        }
+        .num-font { font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 300; }
 
-        /* --- 背景特效層 --- */
+        /* 背景畫布 */
         #canvas-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none; /* 讓點擊穿透到下面的按鈕 */
         }
 
-        /* --- 主容器 --- */
         #app {
             position: relative;
             z-index: 10;
             height: 100%;
             overflow-y: auto;
-            padding: 20px;
-            box-sizing: border-box;
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* 隱藏滾動條但允許滾動 */
-            scrollbar-width: none; 
+            padding: 40px 20px;
+            box-sizing: border-box;
+            scrollbar-width: none;
         }
         #app::-webkit-scrollbar { display: none; }
 
-        /* --- 卡片通用樣式 --- */
-        .card {
+        /* 主卡片 */
+        .fusion-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--shadow);
-            padding: 25px;
-            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.9);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             width: 100%;
             max-width: 400px;
+            padding: 30px 20px;
             text-align: center;
-            transition: transform 0.3s ease;
-        }
-        
-        .card:hover {
-            transform: translateY(-2px);
-        }
-
-        /* --- 標題區域 --- */
-        .header-symbol {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            display: block;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .names {
-            font-size: 1.5rem;
-            margin: 10px 0;
-            font-weight: bold;
-            cursor: pointer; /* 提示可點擊修改 */
-        }
-
-        .main-timer {
-            margin: 20px 0;
-        }
-
-        .main-timer .label {
-            font-size: 1rem;
-            color: #888;
-            margin-bottom: 5px;
-        }
-
-        .main-timer .count {
-            font-size: 4rem;
-            color: #d65a77; /* 胭脂紅 */
-            line-height: 1;
-        }
-
-        .sweet-prefix {
-            font-size: 0.9rem;
-            color: #d65a77;
-            margin-top: 5px;
-            font-weight: bold;
-        }
-
-        /* --- 每日一句 --- */
-        .quote-card {
-            position: relative;
-        }
-
-        .quote-text {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin: 15px 0;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .quote-tag {
-            font-size: 0.7rem;
-            color: #aaa;
-            position: absolute;
-            bottom: 10px;
-            right: 15px;
-            background: rgba(255,255,255,0.8);
-            padding: 2px 6px;
-            border-radius: 10px;
-        }
-
-        .mode-switch {
-            position: absolute;
-            top: 15px;
-            right: 15px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            padding: 4px 10px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.5);
             transition: all 0.3s ease;
-            border: 1px solid transparent;
+            margin-bottom: 20px;
+        }
+        .fusion-card:active { transform: scale(0.98); }
+
+        .header-symbol { font-size: 2.2rem; margin-bottom: 5px; }
+        .names { font-size: 1.4rem; font-weight: bold; margin-bottom: 15px; letter-spacing: 2px; }
+        .main-timer .label { font-size: 0.9rem; color: var(--ink-grey); }
+        .main-timer .count { font-size: 4.5rem; color: var(--accent-red); line-height: 1; margin: 10px 0; }
+        .sweet-prefix { font-size: 0.95rem; color: var(--accent-red); margin-top: 5px; font-weight: bold; }
+
+        /* 水墨橫線 */
+        .ink-hr {
+            margin: 30px auto; width: 80%; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--ink-grey), transparent);
+            border: none; opacity: 0.4; position: relative;
+        }
+        .ink-hr::after {
+            content: "🌸"; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); background: #fff;
+            padding: 0 8px; font-size: 0.7rem;
         }
 
-        /* 營造火焰微光的感覺 */
-        .mode-switch.active { 
-            background: rgba(243, 232, 255, 0.8); /* 淡紫色背景 */
-            border: 1px solid #a855f7;
-            color: #6b21a8;
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
-        }
-        /* --- 紀念日 --- */
+        .quote-section { min-height: 60px; }
+        .quote-text { font-size: 1.1rem; line-height: 1.6; color: var(--ink-black); margin-bottom: 8px; transition: opacity 0.3s; }
+        .quote-tag { font-size: 0.7rem; color: var(--ink-grey); opacity: 0.5; }
+
+        /* 紀念日板塊 */
         .event-card {
-            text-align: left;
+            background: var(--glass-bg);
+            border-radius: 20px; width: 100%; max-width: 400px;
+            padding: 18px; box-sizing: border-box;
+            border: 1px solid rgba(255,255,255,0.6);
         }
-        .event-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            border-bottom: 1px dashed #ccc;
-            padding-bottom: 10px;
-            margin-bottom: 10px;
-        }
-        .event-title { font-size: 1.2rem; font-weight: bold; }
-        .event-days { font-size: 1.5rem; color: #d65a77; }
-        .event-date-info { font-size: 0.85rem; color: #666; margin-top: 5px; }
+        .event-header { display: flex; justify-content: space-between; align-items: center; }
+        .event-days { font-size: 1.6rem; color: var(--accent-red); }
 
-        /* --- 底部按鈕 --- */
+        /* 底部功能按鈕 */
         .fab-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-            z-index: 100;
+            position: fixed; bottom: 30px; right: 25px;
+            display: flex; flex-direction: column; gap: 15px; z-index: 100;
         }
-
         .fab {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: #fff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            cursor: pointer;
-            border: none;
-            outline: none;
+            width: 50px; height: 50px; border-radius: 50%; background: #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12); display: flex; align-items: center;
+            justify-content: center; font-size: 1.3rem; cursor: pointer; border: none;
             transition: transform 0.2s;
         }
-        .fab:active { transform: scale(0.9); }
+        .fab:hover { transform: translateY(-3px); }
 
-        /* --- 模態框 (Settings & List) --- */
+        /* 模態框樣式 */
         .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            z-index: 200;
-            padding: 20px;
-            box-sizing: border-box;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.96); z-index: 2000; padding: 20px; box-sizing: border-box;
             overflow-y: auto;
-            animation: fadeIn 0.3s;
         }
-
-        .modal-content {
-            max-width: 500px;
-            margin: 50px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        }
-
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; color: #666; }
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            font-size: 1rem;
-            box-sizing: border-box;
-            font-family: inherit;
-        }
-        .btn {
-            width: 100%;
-            padding: 12px;
-            background: #eeb8c3;
-            color: #5e4b52;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .event-list-item {
-            background: #f9f9f9;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .delete-btn { color: red; cursor: pointer; padding: 5px; }
-
-        /* --- 動畫 --- */
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
+        .modal-content { max-width: 400px; margin: 40px auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: bold; color: var(--ink-grey); font-size: 0.9rem; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #eee; border-radius: 10px; box-sizing: border-box; font-family: inherit; }
+        
+        .switch-group { display: flex; justify-content: space-between; align-items: center; background: #fefafb; padding: 12px; border-radius: 10px; border: 1px solid #fceef0; }
+        
+        .btn { width: 100%; padding: 15px; background: var(--accent-red); color: white; border: none; border-radius: 10px; font-size: 1rem; cursor: pointer; font-weight: bold; }
+        
+        .event-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px dotted #eee; align-items: center; }
+        .del-x { color: #ccc; cursor: pointer; font-size: 1.2rem; padding-left: 10px; }
     </style>
 </head>
 <body>
@@ -281,460 +132,334 @@
     <canvas id="canvas-bg"></canvas>
 
     <div id="app">
-        <div class="card" id="main-card">
-            <div class="header-symbol" id="display-symbol">💋</div>
-            <div class="names" onclick="openSettings()">
-                <span id="display-name1">承諾</span> & <span id="display-name2">永恆</span>
+        <div class="fusion-card" id="main-trigger" onclick="handleMainCardClick()">
+            <div id="setup-view" style="display:none; padding: 40px 0;">
+                <div style="font-size: 1.2rem; color: var(--accent-red);">🌸 點擊開啟我們的故事</div>
+                <div style="font-size: 0.8rem; color: #999; margin-top: 10px;">尚未設定在一起的日期</div>
             </div>
-            <div class="main-timer">
-                <div class="label">我們已經在一起</div>
-                <div class="count num-font" id="days-count">0</div>
-                <div class="label">天</div>
-                <div class="sweet-prefix" id="sweet-prefix-text"></div>
+
+            <div id="main-view">
+                <div class="header-symbol" id="display-symbol">🌸</div>
+                <div class="names" id="display-names">-- & --</div>
+                
+                <div class="main-timer">
+                    <div class="label">攜手共度</div>
+                    <div class="count num-font" id="days-count">0</div>
+                    <div class="label">晝夜</div>
+                    <div id="sweet-prefix-text" class="sweet-prefix"></div>
+                </div>
+
+                <hr class="ink-hr">
+
+                <div class="quote-section">
+                    <div class="quote-text" id="quote-text">春風十里，不如遇見你。</div>
+                    <div class="quote-tag" id="quote-tag">花見模式 #00</div>
+                </div>
             </div>
         </div>
 
-        <div class="card quote-card" onclick="refreshQuote()">
-            <div class="mode-switch" id="mode-toggle">
-                <span id="mode-icon">🌸</span>
-                <span id="mode-text" style="font-size: 0.8rem; margin-left: 4px;">花見模式</span>
-            </div>
-            <div class="quote-text" id="quote-text">
-                點擊這裡開始我們的故事...
-            </div>
-            <div class="quote-tag" id="quote-tag">Sweet #01</div>
-        </div>
-
-        <div class="card event-card" id="next-event-card">
+        <div class="event-card" id="next-event-card" style="display:none;">
             <div class="event-header">
-                <span class="event-title" id="next-event-name">載入中...</span>
-                <span class="event-days num-font" id="next-event-days">0</span>
-            </div>
-            <div class="event-date-info">
-                目標日期: <span id="next-event-date" class="num-font">--</span> <br>
-                還有 <span id="next-event-countdown" class="num-font">0</span> 天
+                <div>
+                    <div class="event-title" id="next-event-name">載入中...</div>
+                    <div style="font-size: 0.8rem; color:#999; margin-top:4px;" id="next-event-date">--月--日</div>
+                </div>
+                <div style="text-align: right;">
+                    <span class="event-days num-font" id="next-event-days">0</span>
+                    <span style="font-size: 0.8rem; color: var(--ink-grey);">天後</span>
+                </div>
             </div>
         </div>
-
     </div>
 
     <div class="fab-container">
         <button class="fab" onclick="openEventList()" title="紀念日管理">📅</button>
-        <button class="fab" onclick="openSettings()" title="設定">⚙️</button>
+        <button class="fab" onclick="openSettings()" title="系統設定">⚙️</button>
     </div>
 
     <div id="settings-modal" class="modal">
         <div class="modal-content">
-            <h2 style="text-align: center;">💕 設定我們的愛 💕</h2>
+            <h2 style="text-align: center; margin-bottom: 25px;">儀式感設定</h2>
             <div class="form-group">
-                <label>你的名字</label>
-                <input type="text" id="input-name1" placeholder="名字 A">
+                <label>名字 A</label>
+                <input type="text" id="input-name1">
             </div>
             <div class="form-group">
-                <label>對象的名字</label>
-                <input type="text" id="input-name2" placeholder="名字 B">
+                <label>名字 B</label>
+                <input type="text" id="input-name2">
             </div>
             <div class="form-group">
-                <label>在一起的那一天</label>
+                <label>在一起的日期</label>
                 <input type="date" id="input-start-date">
             </div>
             <div class="form-group">
-                <label>愛的符號</label>
+                <label>目前的氛圍</label>
+                <div class="switch-group">
+                    <div>
+                        <span id="setting-mode-icon">🌸</span> 
+                        <span id="setting-mode-text">花見模式</span>
+                    </div>
+                    <input type="checkbox" id="input-naughty-mode" style="width: auto;" onchange="syncModeText()">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>專屬符號</label>
                 <select id="input-symbol">
-                    <option value="💋">💋 親吻</option>
-                    <option value="❤️">❤️ 愛心</option>
-                    <option value="🌹">🌹 玫瑰</option>
-                    <option value="💍">💍 戒指</option>
-                    <option value="🏩">🏩 羞羞</option>
-                    <option value="🧸">🧸 擁抱</option>
+                    <option value="🌸">🌸 櫻花</option>
+                    <option value="💋">💋 擁吻</option>
+                    <option value="🌙">🌙 望月</option>
+                    <option value="🏮">🏮 結緣</option>
+                    <option value="❤️">❤️ 赤誠</option>
                 </select>
             </div>
-            <button class="btn" onclick="saveSettings()">保存甜蜜設定</button>
-            <div style="text-align: center; margin-top: 10px; color: #999; cursor: pointer;" onclick="closeModal('settings-modal')">取消</div>
+            <button class="btn" onclick="saveSettings()">保存並同步</button>
+            <div style="text-align: center; margin-top: 20px; color: #bbb; cursor: pointer; font-size: 0.9rem;" onclick="closeModal('settings-modal')">返回首頁</div>
         </div>
     </div>
 
     <div id="event-list-modal" class="modal">
         <div class="modal-content">
-            <h2 style="text-align: center;">📅 紀念日清單</h2>
-            
-            <div style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px;">
-                <div class="form-group">
-                    <label>紀念日名稱</label>
-                    <input type="text" id="new-event-name" placeholder="例如：第一次旅行">
-                </div>
-                <div class="form-group">
-                    <label>日期</label>
-                    <input type="date" id="new-event-date">
-                </div>
-                <button class="btn" style="background-color: #b8eec3; color: #4b5e52;" onclick="addEvent()">添加紀念日</button>
+            <h2 style="text-align: center;">紀念日清單</h2>
+            <div style="background: #fffafa; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #fceef0;">
+                <input type="text" id="new-event-name" placeholder="事件名稱" style="margin-bottom: 10px; width: 100%; padding: 10px; border: 1px solid #eee; border-radius: 8px;">
+                <input type="date" id="new-event-date" style="margin-bottom: 10px; width: 100%; padding: 10px; border: 1px solid #eee; border-radius: 8px;">
+                <button class="btn" style="padding: 10px; background: #6b21a8;" onclick="addEvent()">確認添加</button>
             </div>
-
-            <div id="events-container">
-                </div>
-            
-            <div style="text-align: center; margin-top: 20px; color: #999; cursor: pointer;" onclick="closeModal('event-list-modal')">關閉</div>
+            <div id="events-container" style="max-height: 250px; overflow-y: auto;"></div>
+            <div style="text-align: center; margin-top: 25px; color: #bbb; cursor: pointer;" onclick="closeModal('event-list-modal')">關閉</div>
         </div>
     </div>
 
     <script>
-        // --- 數據庫 ---
-        const quotesSweet = [
-            "我不太會表達愛，但我每天都在想你。", "你一出現，我的世界就自動調成柔光模式。", "喜歡你這件事，我打算慢慢來，久一點。", "你不用多好，你是你，就已經很好。", "我想把今天過好，因為裡面有你。", "你靠近的時候，我連呼吸都變得溫柔。", "世界很吵，但你一說話，我就安靜了。", "我最喜歡的風景，是你不經意看我的時候。", "有你在的地方，就不像在趕路。", "我想陪你把平凡的日子，過成值得回味的那種。", "你一笑，我就知道今天會是好天氣。", "我不是喜歡熱鬧，我是喜歡有你。", "你不用完美，我喜歡的本來就是真實的你。", "如果生活很累，那我抱你一下。", "你不說話的時候，也很好看。", "我想把你寫進行程表，天天都不刪。", "有些溫柔，我只想留給你。", "你讓我相信，喜歡一個人可以很安心。", "我喜歡你走路的樣子，像慢慢走進我心裡。", "你在，我就不急著去哪。", "如果一天只能選一件開心的事，那一定是你。", "你出現在我生活裡，本身就是禮物。", "我喜歡你，是那種不需要證明的喜歡。", "你不在身邊的時候，我也在為你預留位置。", "我想陪你看很多次日落，不用說話那種。", "你一靠近，我就想把聲音放輕。", "我不是依賴你，我是選擇你。", "你讓「未來」這個詞，變得不那麼遙遠。", "我喜歡你的小習慣，勝過任何驚喜。", "你不用懂我全部，我會慢慢告訴你。", "有你在，連等待都變得值得。", "我喜歡你認真生活的樣子，也喜歡你偷懶的時候。", "你一出現，我就忘了原本在煩什麼。", "我想和你，把日子過成彼此的靠岸。", "你不是我的全部，但你讓一切變完整。", "我願意為你，把步調放慢一點。", "你笑的時候，我心裡會亮一下。", "我喜歡你叫我名字的聲音。", "你不需要特別努力，我本來就站在你這邊。", "我想當你回頭時，永遠都在的那個人。", "如果愛有形狀，那一定很像你。", "你讓我學會，溫柔也是一種力量。", "我喜歡你靠近時，空氣變暖的感覺。", "你在，我就不怕世界太大。", "我想陪你，走過那些不確定的日子。", "你不用問我在不在，我一直都在。", "你是我每天都想確認的那個存在。", "我喜歡你自然靠過來的樣子。", "你讓「喜歡」變得很安靜，也很深。", "我願意把好心情，分一半給你。", "你不必閃閃發光，你照亮我就夠了。", "我喜歡和你一起，什麼都不做。", "你一出現，時間就不再那麼匆忙。", "我想成為你生活裡，很自然的一部分。", "你不用擔心未來，我會陪你想。", "我喜歡你偶爾的小迷糊。", "有你在，日子就不會太薄。", "你讓我開始期待明天。", "我想把溫柔，變成你習以為常的事。", "你靠著我的時候，我覺得自己很被需要。", "我喜歡你對我放心的樣子。", "你不用多說，我懂你的沉默。", "我想跟你一起，把日常過成浪漫。", "你一出現，我就不想假裝堅強。", "我喜歡你靠近時，那種剛剛好的距離。", "有你在，世界就不會太冷。", "我願意陪你，慢慢變老。", "你不是選項，你是答案。", "我喜歡你眼裡的溫柔。", "你讓我懂得，喜歡不一定要轟轟烈烈。", "我想當你最安心的背景。", "你不用撐得那麼用力，我在。", "我喜歡你笑起來，世界跟著亮。", "你在的地方，就是我想回去的地方。", "我願意聽你說所有小事。", "你不用完美，我也不是。", "我喜歡你願意依靠我的時候。", "有你在，連雨天都不討厭了。", "我想和你，把平淡過成溫柔。", "你一回頭，我就知道自己沒走錯方向。", "你是我生活裡，最剛好的存在。", "我想陪你，把時間用在彼此身上。", "你不用逞強，我喜歡你放鬆的樣子。", "有你在，我不怕慢。", "我想成為你每天都想見的人。", "你一出現，我就不想分心。", "我喜歡你自然牽過來的手。", "你讓「回家」變得有意義。", "我願意為你，留住溫柔。", "有你在，心就不漂泊。"
-        ];
+        // --- 語錄數據庫 ---
+        const quotesSweet = ["我不太會表達愛，但我每天都在想你。", "你一出現，我的世界就自動調成柔光模式。", "喜歡你這件事，我打算慢慢來，久一點。", "你不用多好，你是你，就已經很好。", "我想把今天過好，因為裡面有你。", "你靠近的時候，我連呼吸都變得溫柔。", "世界很吵，但你一說話，我就安靜了。", "我最喜歡的風景，是你不經意看我的時候。", "有你在的地方，就不像在趕路。", "我想陪你把平凡的日子，過成值得回味的那種。", "你一笑，我就知道今天會是好天氣。", "我不是喜歡熱鬧，我是喜歡有你。", "你不用完美，我喜歡的本來就是真實的你。", "如果生活很累，那我抱你一下。", "你不說話的時候，也很好看。", "我想把你寫進行程表，天天都不刪。", "有些溫柔，我只想留給你。", "你讓我相信，喜歡一個人可以很安心。", "我喜歡你走路的樣子，像慢慢走進我心裡。", "你在，我就不急著去哪。", "如果一天只能選一件開心的事，那一定是你。", "你出現在我生活裡，本身就是禮物。", "我喜歡你，是那種不需要證明的喜歡。", "你不在身邊的時候，我也在為你預留位置。", "我想陪你看很多次日落，不用說話那種。", "你一靠近，我就想把聲音放輕。", "我不是依賴你，我是選擇你。", "你讓「未來」這個詞，變得不那麼遙遠。", "我喜歡你的小習慣，勝過任何驚喜。", "你不用懂我全部，我會慢慢告訴你。", "有你在，連等待都變得值得。", "我喜歡你認真生活的樣子，也喜歡你偷懶的時候。", "你一出現，我就忘了原本在煩什麼。", "我想和你，把日子過成彼此的靠岸。", "你不是我的全部，但你讓一切變完整。", "我願意為你，把步調放慢一點。", "你笑的時候，我心裡會亮一下。", "我喜歡你叫我名字的聲音。", "你不需要特別努力，我本來就站在你這邊。", "我想當你回頭時，永遠都在的那個人。", "如果愛有形狀，那一定很像你。", "你讓我學會，溫柔也是一種力量。", "我喜歡你靠近時，空氣變暖的感覺。", "你在，我就不怕世界太大。", "我想陪你，走過那些不確定的日子。", "你不用問我在不在，我一直都在。", "你是我每天都想確認的那個存在。", "我喜歡你自然靠過來的樣子。", "你讓「喜歡」變得很安靜，也很深。", "我願意把好心情，分一半給你。", "你不必閃閃發光，你照亮我就夠了。", "我喜歡和你一起，什麼都不做。", "你一出現，時間就不再那麼匆忙。", "我想成為你生活裡，很自然的一部分。", "你不用擔心未來，我會陪你想。", "我喜歡你偶爾的小迷糊。", "有你在，日子就不會太薄。", "你讓我開始期待明天。", "我想把溫柔，變成你習以為常的事。", "你靠著我的時候，我覺得自己很被需要。", "我喜歡你對我放心的樣子。", "你不用多說，我懂你的沉默。", "我想跟你一起，把日常過成浪漫。", "你一出現，我就不想假裝堅強。", "我喜歡你靠近時，那種剛剛好的距離。", "有你在，世界就不會太冷。", "我願意陪你，慢慢變老。", "你不是選項，你是答案。", "我喜歡你眼裡的溫柔。", "你讓我懂得，喜歡不一定要轟轟烈烈。", "我想當你最安心的背景。", "你不用撐得那麼用力，我在。", "我喜歡你笑起來，世界跟著亮。", "你在的地方，就是我想回去的地方。", "我願意聽你說所有小事。", "你不用完美，我也不是。", "我喜歡你願意依靠我的時候。", "有你在，連雨天都不討厭了。", "我想和你，把平淡過成溫柔。", "你一回頭，我就知道自己沒走錯方向。", "你是我生活裡，最剛好的存在。", "我想陪你，把時間用在彼此身上。", "你不用逞強，我喜歡你放鬆的樣子。", "有你在，我不怕慢。", "我想成為你每天都想見的人。", "你一出現，我就不想分心。", "我喜歡你自然牽過來的手。", "你讓「回家」變得有意義。", "我願意為你，留住溫柔。", "有你在，心就不漂泊。"];
+        const quotesNaughty = ["對妳的愛，不只是說說而已，因為剩下的想用行動慢慢來。", "我對你很正經，正經到不太想放過你。", "你一靠近，我的理智就開始下班。", "我想當個紳士，但你一看我，我就想犯規。", "你不用撩，我自己會亂想。", "我喜歡你看著我，又假裝什麼都沒想的樣子。", "我不是壞，我只是對你沒什麼抵抗力。", "你一笑，我就知道今晚會不好睡。", "我很正經地喜歡你，不正經的是後面那些念頭。", "你靠過來的時候，我連呼吸都不太單純。", "我想抱你，是那種不太想放手的。", "你一靠近，我就開始口是心非。", "我不是想撩你，我是想要你。", "你不用說話，我就知道你在想什麼。", "我很乖，只對你不太乖。", "你這樣看我，我很難當好人。", "我喜歡你靠得很近，近到我沒辦法裝冷靜。", "你一皺眉，我就想哄；你一靠近，我就想更壞一點。", "我想把你抱緊，名義上叫保護。", "你對我來說，是那種不能太靠近的危險。", "我對你沒有野心，只有佔有慾。", "你一撒嬌，我所有原則都自動取消。", "我不是故意靠那麼近，是你太好抱。", "你不用試探，我本來就很想。", "我想對你溫柔，也想對你失控。", "你一靠近，我就想把世界靜音。", "我喜歡你那種，明明知道卻不說破的眼神。", "我不太會撩人，我只會一直想你。", "你在我懷裡的時候，我最不像個好人。", "我喜歡你對我毫無防備的樣子。", "我想靠近你，不只是一下。", "你一看我，我就知道自己完了。", "我對你是那種，慢慢來但不打算停的。", "你不用動，我自己會過去。", "我想抱你久一點，理由之後再說。", "你這樣靠著，我會想很多不該想的事。", "我對你，一向不太守規矩。", "你不用提醒我，我知道我在撩。", "我很溫柔，但只對你失控。", "你一靠近，我就忘了什麼叫界線。", "我不是想佔你便宜，我是想佔你。", "你一笑，我就想把你帶走。", "精通墨色之後，我更想染紅你的唇。", "你靠過來的時候，我不太想當君子。", "我想讓你習慣我，習慣到離不開那種。", "你不用躲，我早就看上你了。", "我喜歡你看我時，那種心知肚明。", "我不是想撩你，我是認真想要你。", "你這樣看我，我很難不靠過去。", "我對你，向來沒什麼自制力。"];
 
-        const quotesNaughty = [
-            "對妳的愛，不只是說說而已，因為剩下的想用行動慢慢來。", "我對你很正經，正經到不太想放過你。", "你一靠近，我的理智就開始下班。", "我想當個紳士，但你一看我，我就想犯規。", "你不用撩，我自己會亂想。", "我喜歡你看著我，又假裝什麼都沒想的樣子。", "我不是壞，我只是對你沒什麼抵抗力。", "你一笑，我就知道今晚會不好睡。", "我很正經地喜歡你，不正經的是後面那些念頭。", "你靠過來的時候，我連呼吸都不太單純。", "我想抱你，是那種不太想放手的。", "你一靠近，我就開始口是心非。", "我不是想撩你，我是想要你。", "你不用說話，我就知道你在想什麼。", "我很乖，只對你不太乖。", "你這樣看我，我很難當好人。", "我喜歡你靠得很近，近到我沒辦法裝冷靜。", "你一皺眉，我就想哄；你一靠近，我就想更壞一點。", "我想把你抱緊，名義上叫保護。", "你對我來說，是那種不能太靠近的危險。", "我對你沒有野心，只有佔有慾。", "你一撒嬌，我所有原則都自動取消。", "我不是故意靠那麼近，是你太好抱。", "你不用試探，我本來就很想。", "我想對你溫柔，也想對你失控。", "你一靠近，我就想把世界靜音。", "我喜歡你那種，明明知道卻不說破的眼神。", "我不太會撩人，我只會一直想你。", "你在我懷裡的時候，我最不像個好人。", "我喜歡你對我毫無防備的樣子。", "我想靠近你，不只是一下。", "你一看我，我就知道自己完了。", "我對你是那種，慢慢來但不打算停的。", "你不用動，我自己會過去。", "我想抱你久一點，理由之後再說。", "你這樣靠著，我會想很多不該想的事。", "我對你，一向不太守規矩。", "你不用提醒我，我知道我在撩。", "我很溫柔，但只對你失控。", "你一靠近，我就忘了什麼叫界線。", "我不是想佔你便宜，我是想佔你。", "你一笑，我就想把你帶走。", "我對你，是那種會慢慢逼近的喜歡。", "你靠過來的時候，我不太想當君子。", "我想讓你習慣我，習慣到離不開那種。", "你不用躲，我早就看上你了。", "我喜歡你看我時，那種心知肚明。", "我不是想撩你，我是認真想要你。", "你這樣看我，我很難不靠過去。", "我對你，向來沒什麼自制力。"
-        ];
-
-        // --- 全局狀態與初始化 ---
+        // --- 全局狀態 ---
         let appState = {
-            name1: "親愛的",
-            name2: "寶寶",
-            startDate: new Date().toISOString().split('T')[0], // 默認今天
-            symbol: "💋",
-            isNaughtyMode: false,
-            events: [] // 格式: { id: timestamp, name: string, date: "YYYY-MM-DD" }
+            name1: "我們", name2: "彼此", startDate: "", symbol: "🌸",
+            isNaughtyMode: false, events: []
         };
 
-        // --- 本地儲存功能 ---
+        // --- 核心邏輯 ---
+        function saveState() { localStorage.setItem('loveFusionState_v2', JSON.stringify(appState)); }
         function loadState() {
-            const saved = localStorage.getItem('loveAppState');
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                // 合併數據防止舊版數據缺失字段
-                appState = { ...appState, ...parsed };
-                // 確保事件是數組
-                if(!Array.isArray(appState.events)) appState.events = [];
-            }
+            const saved = localStorage.getItem('loveFusionState_v2');
+            if (saved) appState = JSON.parse(saved);
         }
 
-        function saveState() {
-            localStorage.setItem('loveAppState', JSON.stringify(appState));
-        }
-
-        // --- 核心邏輯：日期計算 ---
-        const ONE_DAY = 1000 * 60 * 60 * 24;
-
-        function updateMainTimer() {
-            document.getElementById('display-name1').innerText = appState.name1;
-            document.getElementById('display-name2').innerText = appState.name2;
-            document.getElementById('display-symbol').innerText = appState.symbol;
-
-            const start = new Date(appState.startDate);
-            const now = new Date();
-            start.setHours(0,0,0,0);
-            now.setHours(0,0,0,0);
-
-            const diffTime = now - start;
-            const diffDays = Math.floor(diffTime / 1000 / 60 / 60 / 24);
-            const daysToShow = diffDays >= 0 ? diffDays : 0;
+        function updateUI() {
+            const hasDate = appState.startDate !== "";
+            document.getElementById('main-view').style.display = hasDate ? 'block' : 'none';
+            document.getElementById('setup-view').style.display = hasDate ? 'none' : 'block';
             
-            document.getElementById('days-count').innerText = daysToShow;
-
-            // --- 感性文案邏輯 ---
-            let prefix = "";
-            const years = Math.floor(daysToShow / 365);
-            const remainingDaysAfterYear = daysToShow % 365;
-            const months = Math.floor(daysToShow / 30);
-
-            if (daysToShow === 0) {
-                prefix = "與你相遇，故事開始筆墨初綻";
-            } else if (daysToShow < 30) {
-                prefix = `與你攜手步過了 ${daysToShow} 個清晨與黃昏`;
-            } else if (daysToShow < 365) {
-                prefix = `同賞了 ${months} 次滿月盈虧，心動依舊`;
-            } else {
-                // 滿一年以上的浪漫說法
-                if (remainingDaysAfterYear === 0) {
-                    prefix = `於歲月流轉間，恰好攜手度過 ${years} 載春秋`;
-                } else {
-                    prefix = `共赴了 ${years} 度春秋，又餘 ${remainingDaysAfterYear} 日深情`;
-                }
-            }
-            
-            document.getElementById('sweet-prefix-text').innerText = prefix;
-        }
-
-        // --- 核心邏輯：每日一句 ---
-        function refreshQuote() {
-            const list = appState.isNaughtyMode ? quotesNaughty : quotesSweet;
-            const type = appState.isNaughtyMode ? "Secret" : "Sweet";
-            
-            const randomIndex = Math.floor(Math.random() * list.length);
-            const quote = list[randomIndex];
-
-            const textEl = document.getElementById('quote-text');
-            const tagEl = document.getElementById('quote-tag');
-
-            // 簡單淡入淡出動畫
-            textEl.style.opacity = 0;
-            setTimeout(() => {
-                textEl.innerText = quote;
-                tagEl.innerText = `${type} #${randomIndex + 1}`;
-                textEl.style.opacity = 1;
-            }, 300);
-        }
-
-        document.getElementById('mode-toggle').addEventListener('click', (e) => {
-            e.stopPropagation(); 
-            appState.isNaughtyMode = !appState.isNaughtyMode; // 切換狀態
-            updateModeUI();   // 更新介面
-            refreshQuote();   // 刷新語錄
-            saveState();      // 儲存設定
-        });
-
-        function updateModeUI() {
-            const toggleBtn = document.getElementById('mode-toggle');
-            const icon = document.getElementById('mode-icon');
-            const text = document.getElementById('mode-text');
-
-            if (appState.isNaughtyMode) {
-                toggleBtn.classList.add('active');
-                icon.innerText = "🌙"; // 換成月亮
-                text.innerText = "微醺模式"; // 優雅的挑逗
-            } else {
-                toggleBtn.classList.remove('active');
-                icon.innerText = "🌸";
-                text.innerText = "花見模式";
-            }
-        }
-
-        // --- 核心邏輯：紀念日計算 ---
-        function updateNextEvent() {
-            const now = new Date();
-            now.setHours(0,0,0,0);
-            const currentYear = now.getFullYear();
-
-            // 構建所有相關日期的列表（包含 "在一起" 紀念日 和 自定義紀念日）
-            let allEvents = [...appState.events];
-            
-            // 加入 "在一起" 的周年紀念
-            allEvents.push({
-                id: 'start-anniversary',
-                name: "在一起週年紀念",
-                date: appState.startDate
-            });
-
-            if (allEvents.length === 0) {
-                document.getElementById('next-event-name').innerText = "點擊右下角添加紀念日";
-                return;
-            }
-
-            let minDiff = Infinity;
-            let targetEvent = null;
-            let targetDateDisplay = null;
-
-            allEvents.forEach(evt => {
-                const evtDate = new Date(evt.date);
-                // 先假設今年的紀念日
-                let nextDate = new Date(currentYear, evtDate.getMonth(), evtDate.getDate());
+            if (hasDate) {
+                document.getElementById('display-names').innerText = `${appState.name1} & ${appState.name2}`;
+                document.getElementById('display-symbol').innerText = appState.symbol;
                 
-                // 如果今年的已經過了，就算明年的
-                if (nextDate < now) {
-                    nextDate = new Date(currentYear + 1, evtDate.getMonth(), evtDate.getDate());
-                }
+                const start = new Date(appState.startDate);
+                const now = new Date();
+                start.setHours(0,0,0,0); now.setHours(0,0,0,0);
+                const diffDays = Math.floor((now - start) / (1000*60*60*24));
+                document.getElementById('days-count').innerText = diffDays >= 0 ? diffDays : 0;
 
-                const diff = (nextDate - now) / ONE_DAY;
-
-                if (diff < minDiff) {
-                    minDiff = diff;
-                    targetEvent = evt;
-                    targetDateDisplay = nextDate;
-                }
-            });
-
-            // 更新 UI
-            if (targetEvent) {
-                const originalDate = new Date(targetEvent.date);
-                // 計算從那天到今天已經過了多少天 (累積總天數)
-                const totalDiff = Math.floor((now - originalDate) / ONE_DAY);
+                let prefix = "";
+                const years = Math.floor(diffDays / 365);
+                const months = Math.floor(diffDays / 30);
+                if (diffDays < 30) prefix = `步過了 ${diffDays} 個清晨與黃昏`;
+                else if (diffDays < 365) prefix = `同賞了 ${months} 次滿月盈虧`;
+                else prefix = `共赴了 ${years} 度春秋，深情依舊`;
+                document.getElementById('sweet-prefix-text').innerText = prefix;
                 
-                document.getElementById('next-event-name').innerText = targetEvent.name;
-                document.getElementById('next-event-days').innerText = Math.ceil(minDiff); // 還有多少天
-                document.getElementById('next-event-countdown').innerText = Math.ceil(minDiff);
-                
-                // 顯示目標日期 (MM-DD)
-                const m = targetDateDisplay.getMonth() + 1;
-                const d = targetDateDisplay.getDate();
-                document.getElementById('next-event-date').innerText = `${m}月${d}日`;
-            }
-        }
-
-        // --- 模態框與列表管理 ---
-        function openSettings() {
-            document.getElementById('input-name1').value = appState.name1;
-            document.getElementById('input-name2').value = appState.name2;
-            document.getElementById('input-start-date').value = appState.startDate;
-            document.getElementById('input-symbol').value = appState.symbol;
-            document.getElementById('settings-modal').style.display = 'block';
-        }
-
-        function saveSettings() {
-            appState.name1 = document.getElementById('input-name1').value || "親愛的";
-            appState.name2 = document.getElementById('input-name2').value || "寶寶";
-            appState.startDate = document.getElementById('input-start-date').value || new Date().toISOString().split('T')[0];
-            appState.symbol = document.getElementById('input-symbol').value;
-            
-            saveState();
-            updateMainTimer();
-            updateNextEvent(); // 因為起始日變了
-            closeModal('settings-modal');
-        }
-
-        function openEventList() {
-            renderEventList();
-            document.getElementById('event-list-modal').style.display = 'block';
-        }
-
-        function addEvent() {
-            const name = document.getElementById('new-event-name').value;
-            const date = document.getElementById('new-event-date').value;
-            if (!name || !date) return alert("請填寫完整信息");
-
-            appState.events.push({
-                id: Date.now(),
-                name: name,
-                date: date
-            });
-            
-            // 清空輸入
-            document.getElementById('new-event-name').value = '';
-            document.getElementById('new-event-date').value = '';
-
-            saveState();
-            renderEventList();
-            updateNextEvent();
-        }
-
-        function deleteEvent(id) {
-            if(confirm("確定要刪除這個紀念日嗎？")) {
-                appState.events = appState.events.filter(e => e.id !== id);
-                saveState();
-                renderEventList();
+                document.getElementById('next-event-card').style.display = 'block';
                 updateNextEvent();
             }
         }
 
+        function handleMainCardClick() {
+            if (appState.startDate === "") openSettings();
+            else refreshQuote();
+        }
+
+        function refreshQuote() {
+            const list = appState.isNaughtyMode ? quotesNaughty : quotesSweet;
+            const modeName = appState.isNaughtyMode ? "微醺模式" : "花見模式";
+            const idx = Math.floor(Math.random() * list.length);
+            
+            const qText = document.getElementById('quote-text');
+            qText.style.opacity = 0;
+            setTimeout(() => {
+                qText.innerText = list[idx];
+                document.getElementById('quote-tag').innerText = `${modeName} #${idx + 1}`;
+                qText.style.opacity = 1;
+            }, 200);
+        }
+
+        function updateNextEvent() {
+            const now = new Date(); now.setHours(0,0,0,0);
+            const currentYear = now.getFullYear();
+            let all = [...appState.events];
+            if(appState.startDate) all.push({ name: "在一起週年紀念", date: appState.startDate });
+
+            let minDiff = Infinity, target = null, targetDate = null;
+            all.forEach(e => {
+                const d = new Date(e.date);
+                let next = new Date(currentYear, d.getMonth(), d.getDate());
+                if (next < now) next = new Date(currentYear + 1, d.getMonth(), d.getDate());
+                const diff = Math.ceil((next - now) / (1000*60*60*24));
+                if (diff < minDiff) { minDiff = diff; target = e; targetDate = next; }
+            });
+
+            if (target) {
+                document.getElementById('next-event-name').innerText = target.name;
+                document.getElementById('next-event-days').innerText = minDiff;
+                document.getElementById('next-event-date').innerText = `${targetDate.getMonth()+1}月${targetDate.getDate()}日`;
+            }
+        }
+
+        // --- 彈窗控制 (確保函數掛載在 window 上) ---
+        window.openSettings = function() {
+            document.getElementById('input-name1').value = appState.name1;
+            document.getElementById('input-name2').value = appState.name2;
+            document.getElementById('input-start-date').value = appState.startDate;
+            document.getElementById('input-symbol').value = appState.symbol;
+            document.getElementById('input-naughty-mode').checked = appState.isNaughtyMode;
+            syncModeText();
+            document.getElementById('settings-modal').style.display = 'block';
+        };
+
+        window.closeModal = function(id) { document.getElementById(id).style.display = 'none'; };
+
+        window.saveSettings = function() {
+            appState.name1 = document.getElementById('input-name1').value || "名字A";
+            appState.name2 = document.getElementById('input-name2').value || "名字B";
+            appState.startDate = document.getElementById('input-start-date').value;
+            appState.symbol = document.getElementById('input-symbol').value;
+            appState.isNaughtyMode = document.getElementById('input-naughty-mode').checked;
+            saveState(); updateUI(); refreshQuote();
+            closeModal('settings-modal');
+        };
+
+        window.syncModeText = function() {
+            const isNaughty = document.getElementById('input-naughty-mode').checked;
+            document.getElementById('setting-mode-icon').innerText = isNaughty ? "🌙" : "🌸";
+            document.getElementById('setting-mode-text').innerText = isNaughty ? "微醺模式" : "花見模式";
+        };
+
+        window.openEventList = function() {
+            renderEventList();
+            document.getElementById('event-list-modal').style.display = 'block';
+        };
+
         function renderEventList() {
             const container = document.getElementById('events-container');
             container.innerHTML = '';
-            
-            // 排序：日期近的在上面 (顯示原日期)
-            // 這裡簡單列出所有
-            if (appState.events.length === 0) {
-                container.innerHTML = '<div style="text-align:center;color:#ccc;padding:10px;">還沒有添加額外的紀念日哦</div>';
-                return;
-            }
-
-            appState.events.forEach(evt => {
+            appState.events.forEach((e, idx) => {
                 const div = document.createElement('div');
-                div.className = 'event-list-item';
-                div.innerHTML = `
-                    <div>
-                        <strong>${evt.name}</strong><br>
-                        <span style="font-size:0.8rem;color:#888;">${evt.date}</span>
-                    </div>
-                    <div class="delete-btn" onclick="deleteEvent(${evt.id})">✖</div>
-                `;
+                div.className = 'event-item';
+                div.innerHTML = `<div><strong>${e.name}</strong><br><small>${e.date}</small></div><span class="del-x" onclick="deleteEvent(${idx})">✖</span>`;
                 container.appendChild(div);
             });
         }
 
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-
-        // 點擊背景關閉模態框
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = "none";
-            }
-        }
-
-        // --- 視覺特效 (Canvas 水墨/鼠標軌跡) ---
-        const canvas = document.getElementById('canvas-bg');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        class Particle {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.size = Math.random() * 20 + 10;
-                this.speedX = Math.random() * 1 - 0.5;
-                this.speedY = Math.random() * 1 - 0.5;
-                // 粉色/水墨色隨機
-                const colors = ['rgba(238, 184, 195, ', 'rgba(94, 75, 82, '];
-                this.colorBase = colors[Math.floor(Math.random() * colors.length)];
-                this.opacity = 0.6;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.size > 0.2) this.size -= 0.1;
-                this.opacity -= 0.005;
-            }
-            draw() {
-                ctx.fillStyle = this.colorBase + this.opacity + ')';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.filter = 'blur(4px)'; // 水墨暈染感
-                ctx.fill();
-                ctx.filter = 'none';
-            }
-        }
-
-        function handleInput(x, y) {
-            for (let i = 0; i < 2; i++) {
-                particles.push(new Particle(x, y));
-            }
-        }
-
-        window.addEventListener('mousemove', (e) => handleInput(e.x, e.y));
-        window.addEventListener('touchmove', (e) => handleInput(e.touches[0].clientX, e.touches[0].clientY));
-
-        function animateBg() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // 繪製一些靜態的背景暈染
-            /* 實際專案中可用更復雜的噪聲算法，這裡用簡單的大圓模擬水墨背景 */
-            /* 為了性能和簡潔，這裡只處理動態粒子 */
-
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-                if (particles[i].size <= 0.2 || particles[i].opacity <= 0) {
-                    particles.splice(i, 1);
-                    i--;
-                }
-            }
-            requestAnimationFrame(animateBg);
-        }
-        animateBg();
-
-
-        // --- 啟動 ---
-        window.onload = () => {
-            loadState();
-            updateMainTimer();
-            updateModeUI();
-            refreshQuote();
-            updateNextEvent();
-            
-            // 設置開關狀態
-            if(appState.isNaughtyMode) {
-                document.getElementById('mode-toggle').classList.add('active');
+        window.addEvent = function() {
+            const name = document.getElementById('new-event-name').value;
+            const date = document.getElementById('new-event-date').value;
+            if (name && date) {
+                appState.events.push({ name, date });
+                saveState(); renderEventList(); updateNextEvent();
+                document.getElementById('new-event-name').value = '';
+                document.getElementById('new-event-date').value = '';
             }
         };
 
+        window.deleteEvent = function(idx) {
+            appState.events.splice(idx, 1);
+            saveState(); renderEventList(); updateNextEvent();
+        };
+
+        // --- 畫布特效 (水墨花朵 & 軌跡) ---
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        let flowers = [];
+        let points = [];
+
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Flower {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 15 + 8;
+                this.alpha = 0;
+                this.maxAlpha = Math.random() * 0.4 + 0.1;
+                this.life = 0;
+                this.color = Math.random() > 0.7 ? '#f8c6d1' : '#e0e0e0'; // 粉色或淡灰色
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                for (let i = 0; i < 5; i++) {
+                    ctx.rotate((Math.PI * 2) / 5);
+                    ctx.beginPath();
+                    ctx.ellipse(this.size, 0, this.size, this.size/1.8, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+                
+                // 生命週期
+                if (this.life < 100) {
+                    this.alpha = Math.min(this.maxAlpha, this.alpha + 0.005);
+                } else {
+                    this.alpha -= 0.002;
+                }
+                this.life++;
+                if (this.alpha <= 0) this.reset();
+            }
+        }
+
+        function initFlowers() {
+            for(let i=0; i<20; i++) flowers.push(new Flower());
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            points.push({x: e.clientX, y: e.clientY, r: 18, a: 0.4});
+            if(points.length > 25) points.shift();
+        });
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            flowers.forEach(f => f.draw());
+            
+            ctx.lineCap = 'round';
+            for(let i=1; i<points.length; i++) {
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(125, 114, 115, ${points[i].a})`;
+                ctx.lineWidth = points[i].r;
+                ctx.moveTo(points[i-1].x, points[i-1].y);
+                ctx.lineTo(points[i].x, points[i].y);
+                ctx.stroke();
+                points[i].a -= 0.015;
+                points[i].r = Math.max(0.1, points[i].r - 0.4);
+            }
+            requestAnimationFrame(animate);
+        }
+
+        // --- 啟動 ---
+        window.addEventListener('DOMContentLoaded', () => {
+            loadState();
+            updateUI();
+            refreshQuote();
+            initFlowers();
+            animate();
+        });
     </script>
 </body>
 </html>
