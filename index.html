@@ -157,10 +157,10 @@
 
         /* 營造火焰微光的感覺 */
         .mode-switch.active { 
-            background: rgba(254, 242, 242, 0.8);
-            border: 1px solid #f87171;
-            color: #b91c1c;
-            box-shadow: 0 0 10px rgba(248, 113, 113, 0.2);
+            background: rgba(243, 232, 255, 0.8); /* 淡紫色背景 */
+            border: 1px solid #a855f7;
+            color: #6b21a8;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
         }
         /* --- 紀念日 --- */
         .event-card {
@@ -423,31 +423,36 @@
 
             const start = new Date(appState.startDate);
             const now = new Date();
-            // 設置時間為 00:00:00 以進行純日期比較
             start.setHours(0,0,0,0);
             now.setHours(0,0,0,0);
 
             const diffTime = now - start;
-            const diffDays = Math.floor(diffTime / ONE_DAY);
-
-            // 確保不顯示負數，若是未來日期則顯示0
+            const diffDays = Math.floor(diffTime / 1000 / 60 / 60 / 24);
             const daysToShow = diffDays >= 0 ? diffDays : 0;
+            
             document.getElementById('days-count').innerText = daysToShow;
 
-            // 甜蜜前綴邏輯
+            // --- 感性文案邏輯 ---
             let prefix = "";
-            if (diffDays >= 365) {
-                const years = (diffDays / 365).toFixed(1);
-                prefix = `共度了 ${years} 個春夏秋冬`;
-            } else if (diffDays >= 100) {
-                prefix = "我們的愛過了百日大關";
-            } else if (diffDays >= 30) {
-                prefix = "甜蜜的第一個月亮";
-            } else if (diffDays === 0) {
-                prefix = "故事從今天開始";
+            const years = Math.floor(daysToShow / 365);
+            const remainingDaysAfterYear = daysToShow % 365;
+            const months = Math.floor(daysToShow / 30);
+
+            if (daysToShow === 0) {
+                prefix = "與你相遇，故事開始筆墨初綻";
+            } else if (daysToShow < 30) {
+                prefix = `與你攜手步過了 ${daysToShow} 個清晨與黃昏`;
+            } else if (daysToShow < 365) {
+                prefix = `同賞了 ${months} 次滿月盈虧，心動依舊`;
             } else {
-                prefix = "每一天都值得紀念";
+                // 滿一年以上的浪漫說法
+                if (remainingDaysAfterYear === 0) {
+                    prefix = `於歲月流轉間，恰好攜手度過 ${years} 載春秋`;
+                } else {
+                    prefix = `共赴了 ${years} 度春秋，又餘 ${remainingDaysAfterYear} 日深情`;
+                }
             }
+            
             document.getElementById('sweet-prefix-text').innerText = prefix;
         }
 
@@ -486,8 +491,8 @@
 
             if (appState.isNaughtyMode) {
                 toggleBtn.classList.add('active');
-                icon.innerText = "🔥";
-                text.innerText = "烈焰模式";
+                icon.innerText = "🌙"; // 換成月亮
+                text.innerText = "微醺模式"; // 優雅的挑逗
             } else {
                 toggleBtn.classList.remove('active');
                 icon.innerText = "🌸";
